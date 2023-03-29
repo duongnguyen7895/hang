@@ -1,0 +1,39 @@
+version: '3.3'
+services:
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.5.3
+    hostname: logstash
+    container_name: logstash
+    user: root
+    ports:
+      - '4560:4560'
+      - '5044:5044'
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./ca.crt:/usr/share/certs/ca.crt
+    networks:
+      - logging-net
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.5.3
+    hostname: filebeat
+    user: root
+    container_name: filebeat
+    volumes:
+      # Bind-mount the logs/ directory, so Filebeat can read its files
+      - '/var/www/asus-vn/shared/var/log/:/mnt/logs/'
+      # Bind-mount a custom configuration file
+      - './filebeat.yml:/usr/share/filebeat/filebeat.yml'
+      # Bind-mount the registry file to avoid data duplication between restarts
+      - './registry/:/usr/share/filebeat/data/'
+    command: filebeat -e
+    restart: on-failure
+    networks:
+      - logging-net
+    depends_on:
+      - logstash
+networks:
+  logging-net: {}

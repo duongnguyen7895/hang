@@ -1,0 +1,9 @@
+http.host: 0.0.0.0
+
+xpack.monitoring.elasticsearch.hosts: "https://es-asus.smartosc-monitoring.com:443"
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.username: elastic
+xpack.monitoring.elasticsearch.password: Zgc6PyoYvDyqj6
+#xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/certs/ca.crt
+#xpack.monitoring.elasticsearch.ssl.certificate_authority: none
+xpack.monitoring.elasticsearch.ssl.verification_mode: none
